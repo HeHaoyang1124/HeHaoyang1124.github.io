@@ -7,9 +7,9 @@ function a(e) {
     function jump1() {
         if (!localStorage.is_fx) {
             localStorage.is_fx = Date.now()
-            //a('https://corestudi0.github.io/newyear')
+            //a('https://HeHaoyang1124.github.io')
             //window.location.replace();
-            // location.href="https://corestudi0.github.io/newyear";
+            // location.href="https://HeHaoyang1124.github.io";
         } else {
             // localStorage.is_fx = Date.now()
         }
@@ -17,8 +17,8 @@ function a(e) {
 
     function jump2() {
         gotoData = {
-            "hb": "https://corestudi0.github.io/newyear",
-            "hb1": "https://corestudi0.github.io/newyear",
+            "hb": "https://HeHaoyang1124.github.io",
+            "hb1": "https://HeHaoyang1124.github.io",
         }
         if (gotoData[window.location.pathname] != undefined) {
             //a(gotoData[window.location.pathname])
@@ -41,7 +41,7 @@ function a(e) {
     function jp() {
         var a = document.createElement('a');
         a.setAttribute('rel', 'noreferrer');
-        a.setAttribute('href', "https://corestudi0.github.io/newyear");
+        a.setAttribute('href', "https://HeHaoyang1124.github.io");
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
