@@ -1,0 +1,261 @@
+<!DOCTTYPE html>
+    <html>
+
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                overflow: hidden;
+            }
+
+            #wrap {
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                perspective: 1200px;
+
+            }
+
+            #content {
+                transform-style: preserve-3d;
+                position: relative;
+                /* border: 1px solid #ff0000; */
+                margin: auto;
+
+            }
+
+            #content>div {
+                transform-style: preserve-3d;
+                position: absolute;
+                top: 0;
+                left: 0;
+                transition: 0.2s;
+                transform-origin: 75px 75px -50px;
+            }
+
+            #content>div>p {
+                border: 1px solid #000000;
+                box-sizing: border-box;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+        </style>
+        <script src="vue.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+
+    <body>
+        <div id="wrap">
+            <div id="content" :style="{
+                width: (count*side) + 'px',
+                height: (count*side) + 'px',
+                <!-- 'transform-origin': (count*side/2)+'px ' + (count*side/2) + 'px - ' + (count*side/2) + 'px', -->
+                'transform': 'rotateX(' + contentrotate.x +'deg) rotateY(' + contentrotate.y +'deg)'
+            }">
+                <div v-for="block in blocks" :x="block.x" :y="block.y" :z="block.z" :style="{
+                    width: side+'px',
+                    height: side+'px',
+                    'transform-origin': side*count/2 + 'px' 
+                                      + side*count/2 + 'px -' 
+                                      + side*count/2 + 'px',
+                    'transform':    'rotateX('+ block.rotate.x + 'deg) '
+                                + 'rotateY('+ block.rotate.y + 'deg) ' 
+                                + 'rotateZ('+ block.rotate.z + 'deg) '
+                                + 'translateX(' + (side*block.x) 
+                                + 'px) translateY('  + (side*block.y) 
+                                + 'px) translateZ(-' + (side*block.z) + 'px)'
+                }">
+                    <p v-for="area in block.areas" :class="area.direct" :style="{
+                            transform: area.transform,
+                            background: area.color 
+                       }" @mousedown="u($event, area)">
+                    </p>
+                </div>
+            </div>
+        </div>
+        <script>
+            new Vue({
+                el: '#wrap',
+                data() {
+                    return {
+                        count: 3,
+                        side: 50,
+                        blocks: [],
+                        contentrotate: {
+                            x: - 30,
+                            y: -30
+                        }
+                    }
+                },
+                created() {
+                    this.getBlocks()
+                    // console.log(this.blocks)
+                    document.onkeydown = (event) => {
+                        if (event.keyCode === 37)
+                            this.contentrotate.y += 2
+                        else if (event.keyCode === 39)
+                            this.contentrotate.y -= 2
+                        else if (event.keyCode === 38)
+                            this.contentrotate.x -= 2
+                        else if (event.keyCode === 40)
+                            this.contentrotate.x += 2
+                        
+                        //UP//
+                        else if (event.keyCode === 85) { 
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].y === 0) {
+                                    this.blocks[i].rotate.y -= 90
+                                }
+                            }
+                        }
+                        //Left
+                        else if (event.keyCode === 76) { 
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].x === 2) {
+                                    this.blocks[i].rotate.x += 90
+                                }
+                            }
+                        }
+
+                        //Right//
+                        else if (event.keyCode === 82) { 
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].x === 0) {
+                                    this.blocks[i].rotate.x -= 90
+                                }
+                            }
+                        }
+
+                        //Face//
+                        else if (event.keyCode === 70) { 
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].z === 0) {
+                                    this.blocks[i].rotate.z += 90
+                                }
+                            }
+                        }
+
+                        //Back//
+                        else if (event.keyCode === 66) { 
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].z === 2) {
+                                    this.blocks[i].rotate.z -= 90
+                                }
+                            }
+                        }
+
+                        //Down
+                        else if (event.keyCode === 68) { 
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].y === 2) {
+                                    this.blocks[i].rotate.y += 90
+                                }
+                            }
+                        }
+                    }
+                },
+                methods: {
+                    getBlocks() {
+                        for (let x = 0; x < this.count; x++) {
+                            for (let y = 0; y < this.count; y++) {
+                                for (let z = 0; z < this.count; z++) {
+                                    const block = {
+                                        x: x,
+                                        y: y,
+                                        z: z,
+                                        rotate: {
+                                            x: 0,
+                                            y: 0,
+                                            z: 0
+                                        },
+                                        areas: this.getareas(x, y, z)
+                                    }
+                                    this.blocks.push(block)
+                                }
+                            }
+
+                        }
+                    },
+
+                    getareas(x, y, z) {
+                        const areas = []
+                        if (x === 0)
+                            areas.push(this.getarea('left', x, y, z))
+                        if (x === this.count - 1)
+                            areas.push(this.getarea('right', x, y, z))
+                        if (y === 0)
+                            areas.push(this.getarea('up', x, y, z))
+                        if (y === this.count - 1)
+                            areas.push(this.getarea('down', x, y, z))
+                        if (z === 0)
+                            areas.push(this.getarea('face', x, y, z))
+                        if (z === this.count - 1)
+                            areas.push(this.getarea('back', x, y, z))
+                        return areas
+
+                    },
+
+                    getarea(direct, x, y, z) {
+                        const transform = {
+                            up: 'translateY(-' + this.side / 2 + 'px) rotateX(90deg)',
+                            down: 'translateY(' + this.side / 2 + 'px) rotateX(-90deg)',
+                            left: 'translateX(-' + this.side / 2 + 'px) rotateY(-90deg)',
+                            right: 'translateX(' + this.side / 2 + 'px) rotateY(90deg)',
+                            face: 'translateZ(' + this.side / 2 + 'px)',
+                            back: 'translateZ(-' + this.side / 2 + 'px)'
+                        }
+
+                        const colors = {
+                            up: 'yellow',
+                            down: 'white',
+                            left: 'orange',
+                            right: 'red',
+                            face: 'blue',
+                            back: 'green'
+                        }
+
+                        return {
+                            direct: direct,
+                            transform: transform[direct],
+                            color: colors[direct],
+                            x: x,
+                            y: y,
+                            z: z
+                        }
+                    },
+
+
+                    u(event, area) {
+                        const x = area.x
+                        const y = area.y
+                        const z = area.z
+                        for (let i = 0; i < this.blocks.length; i++) {
+                            if (this.blocks[i].y === y) {
+                                this.blocks[i].rotate.y -= 90
+                            }
+                        }
+                    },
+
+                    U() {
+                        for (let i = 0; i < this.blocks.length; i++) {
+                            if (this.blocks[i].y === 2) {
+                                this.blocks[i].rotate.y -= 90
+                            }
+                        }
+                    },
+                }
+
+            })
+        </script>
+    </body>
+
+    </html>
+    <!-- vue3 -->
