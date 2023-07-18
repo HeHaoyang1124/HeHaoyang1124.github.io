@@ -60,14 +60,16 @@
                 <!-- 'transform-origin': (count*side/2)+'px ' + (count*side/2) + 'px - ' + (count*side/2) + 'px', -->
                 'transform': 'rotateX(' + contentrotate.x +'deg) rotateY(' + contentrotate.y +'deg)'
             }">
+
                 <div v-for="block in blocks" :x="block.x" :y="block.y" :z="block.z" :style="{
                     width: side+'px',
                     height: side+'px',
                     'transform-origin': side*count/2 + 'px' 
                                       + side*count/2 + 'px -' 
-                                      + side*count/2 + 'px',
+                                      + side*count/3 + 'px',
                     'transform':    'rotateX('+ block.rotate.x + 'deg) '
                                 + 'rotateY('+ block.rotate.y + 'deg) ' 
+
                                 + 'rotateZ('+ block.rotate.z + 'deg) '
                                 + 'translateX(' + (side*block.x) 
                                 + 'px) translateY('  + (side*block.y) 
@@ -76,7 +78,7 @@
                     <p v-for="area in block.areas" :class="area.direct" :style="{
                             transform: area.transform,
                             background: area.color 
-                       }" @mousedown="u($event, area)">
+                       }" @mousedown="down($event, area)">
                     </p>
                 </div>
             </div>
@@ -107,9 +109,9 @@
                             this.contentrotate.x -= 2
                         else if (event.keyCode === 40)
                             this.contentrotate.x += 2
-                        
+
                         //UP//
-                        else if (event.keyCode === 85) { 
+                        else if (event.keyCode === 85) {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].y === 0) {
                                     this.blocks[i].rotate.y -= 90
@@ -117,7 +119,7 @@
                             }
                         }
                         //Left
-                        else if (event.keyCode === 76) { 
+                        else if (event.keyCode === 76) {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].x === 2) {
                                     this.blocks[i].rotate.x += 90
@@ -126,7 +128,7 @@
                         }
 
                         //Right//
-                        else if (event.keyCode === 82) { 
+                        else if (event.keyCode === 82) {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].x === 0) {
                                     this.blocks[i].rotate.x -= 90
@@ -135,7 +137,7 @@
                         }
 
                         //Face//
-                        else if (event.keyCode === 70) { 
+                        else if (event.keyCode === 70) {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].z === 0) {
                                     this.blocks[i].rotate.z += 90
@@ -144,7 +146,7 @@
                         }
 
                         //Back//
-                        else if (event.keyCode === 66) { 
+                        else if (event.keyCode === 66) {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].z === 2) {
                                     this.blocks[i].rotate.z -= 90
@@ -153,7 +155,7 @@
                         }
 
                         //Down
-                        else if (event.keyCode === 68) { 
+                        else if (event.keyCode === 68) {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].y === 2) {
                                     this.blocks[i].rotate.y += 90
@@ -232,22 +234,45 @@
                         }
                     },
 
-
-                    u(event, area) {
+                    down(event, area) {
+                        event.preventDefault()
                         const x = area.x
                         const y = area.y
                         const z = area.z
+                        const startx = event.pageX || event.clientX
+                        const starty = event.pageY || event.clientY
+                        document.onmouseup = (event) => {
+                            const endx = event.pageX || event.clientX
+                            const endy = event.pageY || event.clientY
+                            if (Math.abs(endx - startx) > Math.abs(endy - starty)){
+                                const Clockwise = endx > startx
+                                this.RotateY(x, y, z, Clockwise)
+                            }
+                            else {
+                                console.log('y')
+                                const Clockwise = endy < starty
+                                this.RotateX(x, y, z, Clockwise)
+                            }
+                            document.onmouseup = null
+                        }
+                    },
+
+                    RotateY(x, y, z, Clockwise) {
+                        if(Clockwise === true) val = 1
+                        else val = -1
                         for (let i = 0; i < this.blocks.length; i++) {
                             if (this.blocks[i].y === y) {
-                                this.blocks[i].rotate.y -= 90
+                                this.blocks[i].rotate.y += 90 * val
                             }
                         }
                     },
 
-                    U() {
+                    RotateX(x, y, z, Clockwise) {
+                        if(Clockwise === true) val = 1 
+                        else val = -1
                         for (let i = 0; i < this.blocks.length; i++) {
-                            if (this.blocks[i].y === 2) {
-                                this.blocks[i].rotate.y -= 90
+                            if (this.blocks[i].x === x) {
+                                this.blocks[i].rotate.x += 90 * val
                             }
                         }
                     },
