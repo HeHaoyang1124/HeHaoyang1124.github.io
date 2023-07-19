@@ -35,7 +35,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                transition: 0.2s;
+                /* transition: 0.2s; */
                 transform-origin: 150px 150px -100px;
             }
 
@@ -58,7 +58,8 @@
                 width: (count*side) + 'px',
                 height: (count*side) + 'px',
                 <!-- 'transform-origin': (count*side/2)+'px ' + (count*side/2) + 'px - ' + (count*side/2) + 'px', -->
-                'transform': 'rotateX(' + contentrotate.x +'deg) rotateY(' + contentrotate.y +'deg)'
+                'transform': 'rotateX(' + contentrotate.x +'deg) rotateY(' + contentrotate.y +'deg)',
+                'transition': transition + 's'
             }">
 
                 <div v-for="block in blocks" :x="block.x" :y="block.y" :z="block.z" :style="{
@@ -73,7 +74,8 @@
                                 + 'rotateZ('+ block.rotate.z + 'deg) '
                                 + 'translateX(' + (side*block.x) 
                                 + 'px) translateY('  + (side*block.y) 
-                                + 'px) translateZ(-' + (side*block.z) + 'px)'
+                                + 'px) translateZ(-' + (side*block.z) + 'px)',
+                    'transition': transition + 's'
                 }">
                     <p v-for="area in block.areas" :class="area.direct" :style="{
                             transform: area.transform,
@@ -94,15 +96,37 @@
                         contentrotate: {
                             x: - 30,
                             y: -30
-                        }
+                        },
+                        transition: 0
                     }
                 },
                 created() {
                     this.getBlocks()
                     // console.log(this.blocks)
                     document.onkeydown = (event) => {
-                        if (event.keyCode === 37)
-                            this.contentrotate.y += 2
+                        if (event.keyCode === 37) {
+                            // this.contentrotate.y += 2
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                this.transition = 0.05
+                                this.blocks[i].rotate.y -= 90
+
+                                setTimeout(() => {
+                                    this.transition = 0
+                                    const oldx = this.blocks[i].x
+                                    this.blocks[i].x = this.blocks[i].z
+                                    this.blocks[i].z = 2 - oldx
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'left' }
+                                        else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'back' }
+                                        else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'face' }
+                                        else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'right' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.y += 90
+                                }, 50)
+                            }
+
+                        }
                         else if (event.keyCode === 39)
                             this.contentrotate.y -= 2
                         else if (event.keyCode === 38)
@@ -110,183 +134,296 @@
                         else if (event.keyCode === 40)
                             this.contentrotate.x += 2
 
-                        //UP-Yellow
-                        else if (event.keyCode === 85) {
+                        //UP
+                        else if (event.keyCode === 74) {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].y === 0) {
-                                    // this.blocks[i].rotate.y += 90
-                                    const oldx = this.blocks[i].x
-                                    this.blocks[i].x = this.blocks[i].z
-                                    this.blocks[i].z = 2 - oldx
-                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                        if (this.blocks[i].areas[j].direct === 'face') {
-                                            this.blocks[i].areas[j].direct = 'left'
-                                            this.blocks[i].areas[j].transform = this.getarea('left').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'left') {
-                                            this.blocks[i].areas[j].direct = 'back'
-                                            this.blocks[i].areas[j].transform = this.getarea('back').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'right') {
-                                            this.blocks[i].areas[j].direct = 'face'
-                                            this.blocks[i].areas[j].transform = this.getarea('face').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'back') {
-                                            this.blocks[i].areas[j].direct = 'right'
-                                            this.blocks[i].areas[j].transform = this.getarea('right').transform
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        //Left-Orange
-                        else if (event.keyCode === 76) {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].x === 0) {
-                                    // this.blocks[i].rotate.x -= 90
-                                    const oldz = this.blocks[i].z
-                                    this.blocks[i].z = this.blocks[i].y
-                                    this.blocks[i].y = 2 - oldz
-                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                        if (this.blocks[i].areas[j].direct === 'face') {
-                                            this.blocks[i].areas[j].direct = 'down'
-                                            this.blocks[i].areas[j].transform = this.getarea('down').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'down') {
-                                            this.blocks[i].areas[j].direct = 'back'
-                                            this.blocks[i].areas[j].transform = this.getarea('back').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'up') {
-                                            this.blocks[i].areas[j].direct = 'face'
-                                            this.blocks[i].areas[j].transform = this.getarea('face').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'back') {
-                                            this.blocks[i].areas[j].direct = 'up'
-                                            this.blocks[i].areas[j].transform = this.getarea('up').transform
-                                        }
-                                    }
-                                }
-                            }
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.y -= 90
 
-                        }
-
-                        //Right-Red
-                        else if (event.keyCode === 82) {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].x === 2) {
-                                    // this.blocks[i].rotate.x += 90
-                                    const oldy = this.blocks[i].y
-                                    this.blocks[i].y = this.blocks[i].z
-                                    this.blocks[i].z = 2 - oldy
-                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                        if (this.blocks[i].areas[j].direct === 'back') {
-                                            this.blocks[i].areas[j].direct = 'down'
-                                            this.blocks[i].areas[j].transform = this.getarea('down').transform
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldx = this.blocks[i].x
+                                        this.blocks[i].x = this.blocks[i].z
+                                        this.blocks[i].z = 2 - oldx
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'left' }
+                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'back' }
+                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'face' }
+                                            else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'right' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
                                         }
-                                        else if (this.blocks[i].areas[j].direct === 'up') {
-                                            this.blocks[i].areas[j].direct = 'back'
-                                            this.blocks[i].areas[j].transform = this.getarea('back').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'down') {
-                                            this.blocks[i].areas[j].direct = 'face'
-                                            this.blocks[i].areas[j].transform = this.getarea('face').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'face') {
-                                            this.blocks[i].areas[j].direct = 'up'
-                                            this.blocks[i].areas[j].transform = this.getarea('up').transform
-                                        }
-                                    }
+                                        this.blocks[i].rotate.y += 90
+                                    }, 50)
                                 }
                             }
                         }
 
-
-                        //Face-Blue
+                        //U'
                         else if (event.keyCode === 70) {
                             for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].z === 0) {
-                                    // this.blocks[i].rotate.z += 90
-                                    const oldy = this.blocks[i].y
-                                    this.blocks[i].y = this.blocks[i].x
-                                    this.blocks[i].x = 2 - oldy
-                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                        if (this.blocks[i].areas[j].direct === 'right') {
-                                            this.blocks[i].areas[j].direct = 'down'
-                                            this.blocks[i].areas[j].transform = this.getarea('down').transform
+                                if (this.blocks[i].y === 0) {
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.y += 90
+
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldz = this.blocks[i].z
+                                        this.blocks[i].z = this.blocks[i].x
+                                        this.blocks[i].x = 2 - oldz
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'right' }
+                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'face' }
+                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'back' }
+                                            else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'left' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
                                         }
-                                        else if (this.blocks[i].areas[j].direct === 'up') {
-                                            this.blocks[i].areas[j].direct = 'right'
-                                            this.blocks[i].areas[j].transform = this.getarea('right').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'down') {
-                                            this.blocks[i].areas[j].direct = 'left'
-                                            this.blocks[i].areas[j].transform = this.getarea('left').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'left') {
-                                            this.blocks[i].areas[j].direct = 'up'
-                                            this.blocks[i].areas[j].transform = this.getarea('up').transform
-                                        }
-                                    }
+                                        this.blocks[i].rotate.y -= 90
+                                    }, 50)
                                 }
                             }
                         }
 
-                        //Back-Green
-                        else if (event.keyCode === 66) {
+
+                        //Left
+                        else if (event.keyCode === 86) {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].x === 0) {
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.x -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldz = this.blocks[i].z
+                                        this.blocks[i].z = this.blocks[i].y
+                                        this.blocks[i].y = 2 - oldz
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'down' }
+                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'back' }
+                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'face' }
+                                            else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'up' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                        }
+                                        this.blocks[i].rotate.x += 90
+                                    }, 50)
+                                }
+                            }
+
+                        }
+                        //L'
+                        else if (event.keyCode === 65) {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].x === 0) {
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.x += 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldy = this.blocks[i].y
+                                        this.blocks[i].y = this.blocks[i].z
+                                        this.blocks[i].z = 2 - oldy
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'up' }
+                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'face' }
+                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'back' }
+                                            else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'down' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                        }
+                                        this.blocks[i].rotate.x -= 90
+                                    }, 50)
+                                }
+                            }
+
+                        }
+
+                        //Rright
+                        else if (event.keyCode === 186) {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].x === 2) {
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.x += 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldy = this.blocks[i].y
+                                        this.blocks[i].y = this.blocks[i].z
+                                        this.blocks[i].z = 2 - oldy
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'down' }
+                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'back' }
+                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'face' }
+                                            else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'up' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                        }
+                                        this.blocks[i].rotate.x -= 90
+                                    }, 50)
+                                }
+                            }
+                        }
+
+                        //R'
+                        else if (event.keyCode === 78) {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].x === 2) {
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.x -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldz = this.blocks[i].z
+                                        this.blocks[i].z = this.blocks[i].y
+                                        this.blocks[i].y = 2 - oldz
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'up' }
+                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'face' }
+                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'back' }
+                                            else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'down' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                        }
+                                        this.blocks[i].rotate.x += 90
+                                    }, 50)
+                                }
+                            }
+                        }
+
+                        //Face
+                        else if (event.keyCode === 85) {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].z === 0) {
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.z += 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldy = this.blocks[i].y
+                                        this.blocks[i].y = this.blocks[i].x
+                                        this.blocks[i].x = 2 - oldy
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'down' }
+                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'right' }
+                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'left' }
+                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'up' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                        }
+                                        this.blocks[i].rotate.z -= 90
+                                    }, 50)
+                                }
+                            }
+                        }
+
+                        //F'
+                        else if (event.keyCode === 82) {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].z === 0) {
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.z -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldx = this.blocks[i].x
+                                        this.blocks[i].x = this.blocks[i].y
+                                        this.blocks[i].y = 2 - oldx
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'up' }
+                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'left' }
+                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'right' }
+                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'down' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                        }
+                                        this.blocks[i].rotate.z += 90
+                                    }, 50)
+                                }
+                            }
+                        }
+
+
+                        //Back
+                        else if (event.keyCode === 88) {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].z === 2) {
-                                    // this.blocks[i].rotate.z -= 90
-                                    const oldx = this.blocks[i].x
-                                    this.blocks[i].x = this.blocks[i].y
-                                    this.blocks[i].y = 2 - oldx
-                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                        if (this.blocks[i].areas[j].direct === 'left') {
-                                            this.blocks[i].areas[j].direct = 'down'
-                                            this.blocks[i].areas[j].transform = this.getarea('down').transform
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.z -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldx = this.blocks[i].x
+                                        this.blocks[i].x = this.blocks[i].y
+                                        this.blocks[i].y = 2 - oldx
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'down' }
+                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'right' }
+                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'left' }
+                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'up' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
                                         }
-                                        else if (this.blocks[i].areas[j].direct === 'down') {
-                                            this.blocks[i].areas[j].direct = 'right'
-                                            this.blocks[i].areas[j].transform = this.getarea('right').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'up') {
-                                            this.blocks[i].areas[j].direct = 'left'
-                                            this.blocks[i].areas[j].transform = this.getarea('left').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'right') {
-                                            this.blocks[i].areas[j].direct = 'up'
-                                            this.blocks[i].areas[j].transform = this.getarea('up').transform
-                                        }
-                                    }
+                                        this.blocks[i].rotate.z += 90
+                                    }, 50)
                                 }
                             }
                         }
 
-                        //Down-White
-                        else if (event.keyCode === 68) {
+                        //B'
+                        else if (event.keyCode === 190) {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].z === 2) {
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.z -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldy = this.blocks[i].y
+                                        this.blocks[i].y = this.blocks[i].x
+                                        this.blocks[i].x = 2 - oldy
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'down' }
+                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'right' }
+                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'left' }
+                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'up' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                        }
+                                        this.blocks[i].rotate.z += 90
+                                    }, 50)
+                                }
+                            }
+                        }
+
+
+                        //Down
+                        else if (event.keyCode === 83) {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].y === 2) {
-                                    // this.blocks[i].rotate.y += 90
-                                    const oldz = this.blocks[i].z
-                                    this.blocks[i].z = this.blocks[i].x
-                                    this.blocks[i].x = 2 - oldz
-                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                        if (this.blocks[i].areas[j].direct === 'back') {
-                                            this.blocks[i].areas[j].direct = 'left'
-                                            this.blocks[i].areas[j].transform = this.getarea('left').transform
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.y += 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldz = this.blocks[i].z
+                                        this.blocks[i].z = this.blocks[i].x
+                                        this.blocks[i].x = 2 - oldz
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'left' }
+                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'back' }
+                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'face' }
+                                            else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'right' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
                                         }
-                                        else if (this.blocks[i].areas[j].direct === 'right') {
-                                            this.blocks[i].areas[j].direct = 'back'
-                                            this.blocks[i].areas[j].transform = this.getarea('back').transform
+                                        this.blocks[i].rotate.y -= 90
+                                    }, 50)
+                                }
+                            }
+                        }
+
+                        //D'
+                        else if (event.keyCode === 76) {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].y === 2) {
+                                    this.transition = 0.05
+                                    this.blocks[i].rotate.y -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0
+                                        const oldx = this.blocks[i].x
+                                        this.blocks[i].x = this.blocks[i].z
+                                        this.blocks[i].z = 2 - oldx
+                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                            if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'right' }
+                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'face' }
+                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'back' }
+                                            else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'left' }
+                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
                                         }
-                                        else if (this.blocks[i].areas[j].direct === 'left') {
-                                            this.blocks[i].areas[j].direct = 'face'
-                                            this.blocks[i].areas[j].transform = this.getarea('face').transform
-                                        }
-                                        else if (this.blocks[i].areas[j].direct === 'face') {
-                                            this.blocks[i].areas[j].direct = 'right'
-                                            this.blocks[i].areas[j].transform = this.getarea('right').transform
-                                        }
-                                    }
+                                        this.blocks[i].rotate.y += 90
+                                    }, 50)
                                 }
                             }
                         }
