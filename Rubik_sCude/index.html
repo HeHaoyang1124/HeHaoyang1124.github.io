@@ -247,7 +247,8 @@
                             y: 0,
                             z: 0,
                             direct: 'face'
-                        }
+                        },
+                        delay: 0
                     }
                 },
                 created() {
@@ -324,23 +325,29 @@
                     },
 
                     getCorner(TargetColor1, TargetColor2, TargetColor3) {
-                        //return: x, y, z, direct
+                        var TargetColors = []
+                        TargetColors.push(TargetColor1)
+                        TargetColors.push(TargetColor2)
+                        TargetColors.push(TargetColor3)
+                        TargetColors.sort()
                         for (let i = 0; i < this.blocks.length; i++) {
                             if (this.blocks[i].areas.length === 3) {
-                                color1 = this.blocks[i].areas[0].color
-                                color2 = this.blocks[i].areas[1].color
-                                color3 = this.blocks[i].areas[2].color
-                                var colors = { color1, color2, color3 }
-                                var TargetColors = { TargetColor1, TargetColor2, TargetColor3 }
+                                var colors = []
+                                colors.push(this.blocks[i].areas[0].color)
+                                colors.push(this.blocks[i].areas[1].color)
+                                colors.push(this.blocks[i].areas[2].color)
                                 colors.sort()
                                 TargetColors.sort()
-                                if (colors === TargetColors) {
+                                if (colors[0] === TargetColors[0]
+                                    && colors[1] === TargetColors[1]
+                                    && colors[2] === TargetColors[2]) {
                                     this.corner.x = this.blocks[i].x
                                     this.corner.y = this.blocks[i].y
                                     this.corner.z = this.blocks[i].z
-                                    if (TargetColor1 === color1) { this.corner.x = this.blocks[i].areas[0].direct }
-                                    else if (TargetColor1 === color2) { this.corner.y = this.blocks[i].areas[1].direct }
-                                    else if (TargetColor1 === color3) { this.corner.z = this.blocks[i].areas[2].direct }
+                                    if (TargetColor1 === color1) { this.corner.direct = this.blocks[i].areas[0].direct }
+                                    else if (TargetColor1 === color2) { this.corner.direct = this.blocks[i].areas[1].direct }
+                                    else if (TargetColor1 === color3) { this.corner.direct = this.blocks[i].areas[2].direct }
+                                    return
                                 }
                             }
                         }
@@ -400,9 +407,9 @@
                         var MinorColor = colors[num + 1]
                         this.positioning(TargetColor)
                         this.getCorner('white', TargetColor, MinorColor)
-                        var x = this.prisms.x
-                        var y = this.prisms.y
-                        var z = this.prisms.z
+                        var x = this.corner.x
+                        var y = this.corner.y
+                        var z = this.corner.z
                         var direct = this.prisms.direct
 
                         if (x === 2 && y === 2 && z === 0 && direct === 'down')
@@ -419,7 +426,7 @@
                         }
 
                         this.getCorner('white', TargetColor, MinorColor)
-                        var direct = this.prisms.direct
+                        var direct = this.corner.direct
                         if (direct === 'face') { this.Notation('F_U_F') }
                         else if (direct === 'up') { this.Notation('URUUR_F_U_F') }
                         else if (direct === 'right') { this.Notation('RUR_') }
@@ -430,7 +437,7 @@
                         //positioning
                         this.positioning('white')
                         for (let i = 1; i <= 4; i++) this.Make_Cross(i)
-                        for (let i = 1; i <= 1; i++) this.Make_Corner(i)
+                        for (let i = 1; i <= 4; i++) this.Make_Corner(i)
                     },
 
                     Start() {
@@ -535,7 +542,6 @@
                                     }, this.delay)
                                 }
                             }
-
                         }
 
                         //L'
@@ -560,7 +566,6 @@
                                     }, this.delay)
                                 }
                             }
-
                         }
 
                         //Rright
@@ -753,6 +758,7 @@
                                     }, this.delay)
                                 }
                             }
+                            // this.sleep(200)
                         }
 
                         //y'
@@ -776,6 +782,7 @@
                                     this.blocks[i].rotate.y += 90
                                 }, this.delay)
                             }
+                            // this.sleep(200)
                         }
                         //y
                         else if (Operation === 'y') {
@@ -798,6 +805,7 @@
                                     this.blocks[i].rotate.y -= 90
                                 }, this.delay)
                             }
+                            // this.sleep(200)
                         }
 
                         else if (Operation === 'x') {
