@@ -91,7 +91,7 @@
                     <p v-for="area in block.areas" :class="area.direct" :style="{
                             transform: area.transform,
                             background: area.color 
-                       }" @mousedown="down($event, area)">
+                       }">
                     </p>
                 </div>
             </div>
@@ -207,6 +207,20 @@
                     height: '80',
                     'font-size': '40'
                 }" @click="Rotate('y')" />
+
+                <input type="button" value="Solve" :style="{
+                    transform: 'translate(-800px, 500px)',
+                    width: '200',
+                    height: '80',
+                    'font-size': '40'
+                }" @click="Solve()" />
+
+                <input type="button" value="Start" :style="{
+                    transform: 'translate(-800px, 400px)',
+                    width: '200',
+                    height: '80',
+                    'font-size': '40'
+                }" @click="Start()" />
             </div>
         </div>
         <script>
@@ -221,7 +235,19 @@
                             x: - 30,
                             y: -30
                         },
-                        transition: 0
+                        transition: 0,
+                        prisms: {
+                            x: 0,
+                            y: 0,
+                            z: 0,
+                            direct: 'face'
+                        },
+                        corner: {
+                            x: 0,
+                            y: 0,
+                            z: 0,
+                            direct: 'face'
+                        }
                     }
                 },
                 created() {
@@ -233,6 +259,184 @@
                     }
                 },
                 methods: {
+                    Notation(String) {
+                        for (let i = 0; i < String.length; i++) {
+                            if (i < String.length - 1 && String[i + 1] === '_') {
+                                this.Rotate(String[i] + '_')
+                                i++
+                            } else this.Rotate(String[i])
+                        }
+                    },
+
+                    getTargetDirect(TargetColor) {
+                        for (let i = 0; i < this.blocks.length; i++) {
+                            if (this.blocks[i].areas.length === 1 && this.blocks[i].areas[0].color === TargetColor)
+                                return this.blocks[i].areas[0].direct
+                        }
+                    },
+
+                    positioning(TargetColor) {
+                        direct = this.getTargetDirect(TargetColor)
+                        if (TargetColor === 'white') {
+                            if (direct === 'up') {
+                                this.Notation('x_x_')
+                            } else if (direct === 'face') {
+                                this.Rotate('x')
+                            } else if (direct === 'back') {
+                                this.Rotate('x_')
+                            } else if (direct === 'left') {
+                                this.Notation('yx_')
+                            } else if (direct === 'right') {
+                                this.Notation('y_x_')
+                            }
+                        }
+                        else {
+                            if (direct === 'back') {
+                                this.Rotate('yy')
+                            } else if (direct === 'left') {
+                                this.Notation('y_')
+                            } else if (direct === 'right') {
+                                this.Notation('y')
+                            }
+                        }
+                    },
+
+                    getPrisms(TargetColor1, TargetColor2) {
+                        //return: x, y, z, direct
+                        for (let i = 0; i < this.blocks.length; i++) {
+                            if (this.blocks[i].areas.length === 2) {
+                                color1 = this.blocks[i].areas[0].color
+                                color2 = this.blocks[i].areas[1].color
+                                if (color1 === TargetColor1 && color2 === TargetColor2) {
+                                    this.prisms.x = this.blocks[i].x
+                                    this.prisms.y = this.blocks[i].y
+                                    this.prisms.z = this.blocks[i].z
+                                    this.prisms.direct = this.blocks[i].areas[0].direct
+                                }
+                                if (color2 === TargetColor1 && color1 === TargetColor2) {
+                                    this.prisms.x = this.blocks[i].x
+                                    this.prisms.y = this.blocks[i].y
+                                    this.prisms.z = this.blocks[i].z
+                                    this.prisms.direct = this.blocks[i].areas[1].direct
+                                }
+                            }
+                        }
+                    },
+
+                    getCorner(TargetColor1, TargetColor2, TargetColor3) {
+                        //return: x, y, z, direct
+                        for (let i = 0; i < this.blocks.length; i++) {
+                            if (this.blocks[i].areas.length === 3) {
+                                color1 = this.blocks[i].areas[0].color
+                                color2 = this.blocks[i].areas[1].color
+                                color3 = this.blocks[i].areas[2].color
+                                var colors = { color1, color2, color3 }
+                                var TargetColors = { TargetColor1, TargetColor2, TargetColor3 }
+                                colors.sort()
+                                TargetColors.sort()
+                                if (colors === TargetColors) {
+                                    this.corner.x = this.blocks[i].x
+                                    this.corner.y = this.blocks[i].y
+                                    this.corner.z = this.blocks[i].z
+                                    if (TargetColor1 === color1) { this.corner.x = this.blocks[i].areas[0].direct }
+                                    else if (TargetColor1 === color2) { this.corner.y = this.blocks[i].areas[1].direct }
+                                    else if (TargetColor1 === color3) { this.corner.z = this.blocks[i].areas[2].direct }
+                                }
+                            }
+                        }
+                    },
+
+                    Make_Cross(num) {
+                        const colors = {
+                            1: 'blue',
+                            2: 'red',
+                            3: 'green',
+                            4: 'orange'
+                        }
+
+                        var target_color = colors[num]
+                        this.positioning(target_color)
+                        this.getPrisms('white', target_color)
+                        var x = this.prisms.x
+                        var y = this.prisms.y
+                        var z = this.prisms.z
+                        var direct = this.prisms.direct
+
+                        if (x === 1 && y === 2 && z === 0 && direct === 'down')
+                            return
+                        if (y === 2) {//bottom
+                            if (x === 1 && z === 2) this.Notation('BBUU')
+                            else if (x === 0 && z === 1) this.Notation('LLU_')
+                            else if (x === 1 && z === 0) this.Notation('FF')
+                            else if (x === 2 && z === 1) this.Notation('RRU')
+                        } else if (y === 1) {//middle
+                            if (x === 0 && z === 0) { this.Notation('L_U_L') }
+                            if (x === 0 && z === 2) { this.Notation('LU_L_') }
+                            if (x === 2 && z === 0) { this.Notation('RUR_') }
+                            if (x === 2 && z === 2) { this.Notation('R_UR') }
+                        } else {
+                            if (x === 1 && z === 2) { this.Notation('UU') }
+                            else if (x === 0 && z === 1) { this.Notation('U_') }
+                            else if (x === 2 && z === 1) { this.Notation('U') }
+                        }
+
+                        //top
+                        this.getPrisms('white', target_color)
+                        if (this.prisms.direct === 'face') this.Notation('U_R_FR')
+                        else if (this.prisms.direct === 'up') this.Notation('FF')
+                    },
+
+                    Make_Corner(num) {
+                        const colors = {
+                            1: 'blue',
+                            2: 'red',
+                            3: 'green',
+                            4: 'orange',
+                            5: 'blue'
+                        }
+
+
+                        var TargetColor = colors[num]
+                        var MinorColor = colors[num + 1]
+                        this.positioning(TargetColor)
+                        this.getCorner('white', TargetColor, MinorColor)
+                        var x = this.prisms.x
+                        var y = this.prisms.y
+                        var z = this.prisms.z
+                        var direct = this.prisms.direct
+
+                        if (x === 2 && y === 2 && z === 0 && direct === 'down')
+                            return
+                        if (y === 2) {
+                            if (x === 0 && z === 2) { this.Notation('LUL_U') }
+                            else if (x === 2 && z === 2) { this.Notation('R_URU') }
+                            else if (x === 0 && z === 0) { this.Notation('L_U_L') }
+                            else if (x === 2 && z === 0) { this.Notation('RU_R_') }
+                        } else if (y === 0) {
+                            if (x === 0 && z === 2) { this.Notation('UU') }
+                            else if (x === 2 && z === 2) { this.Notation('U') }
+                            else if (x === 0 && z === 0) { this.Notation('U_') }
+                        }
+
+                        this.getCorner('white', TargetColor, MinorColor)
+                        var direct = this.prisms.direct
+                        if (direct === 'face') { this.Notation('F_U_F') }
+                        else if (direct === 'up') { this.Notation('URUUR_F_U_F') }
+                        else if (direct === 'right') { this.Notation('RUR_') }
+                        //
+                    },
+
+                    Solve() {
+                        //positioning
+                        this.positioning('white')
+                        for (let i = 1; i <= 4; i++) this.Make_Cross(i)
+                        for (let i = 1; i <= 1; i++) this.Make_Corner(i)
+                    },
+
+                    Start() {
+                        this.Notation('DU_F_R_ B_DDL_R_B_U_L_D_U_FDF_D_FLBF_R_D_L_R_')
+                    },
+
                     getOperation(keycode) {
                         const operation = {
                             74: 'U',
@@ -276,8 +480,12 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.y -= 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
+                                var x = this.prisms.x
+                                var y = this.prisms.y
+                                var z = this.prisms.z
+                                var direct = this.prisms.direct
                             }
                         }
 
@@ -300,7 +508,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.y += 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
                         }
@@ -324,7 +532,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.x -= 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
 
@@ -349,7 +557,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.x += 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
 
@@ -374,7 +582,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.x += 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
                         }
@@ -398,7 +606,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.x -= 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
                         }
@@ -422,7 +630,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.z += 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
                         }
@@ -446,7 +654,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.z -= 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
                         }
@@ -470,7 +678,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.z -= 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
                         }
@@ -494,7 +702,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.z += 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
                         }
@@ -518,7 +726,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.y += 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
                         }
@@ -542,7 +750,7 @@
                                     setTimeout(() => {
                                         this.transition = 0.2
                                         this.blocks[i].rotate.y -= 90
-                                    }, 0)
+                                    }, this.delay)
                                 }
                             }
                         }
@@ -566,7 +774,7 @@
                                 setTimeout(() => {
                                     this.transition = 0.2
                                     this.blocks[i].rotate.y += 90
-                                }, 0)
+                                }, this.delay)
                             }
                         }
                         //y
@@ -588,7 +796,7 @@
                                 setTimeout(() => {
                                     this.transition = 0.2
                                     this.blocks[i].rotate.y -= 90
-                                }, 0)
+                                }, this.delay)
                             }
                         }
 
@@ -609,7 +817,7 @@
                                 setTimeout(() => {
                                     this.transition = 0.2
                                     this.blocks[i].rotate.x -= 90
-                                }, 0)
+                                }, this.delay)
                             }
                         }
 
@@ -630,7 +838,7 @@
                                 setTimeout(() => {
                                     this.transition = 0.2
                                     this.blocks[i].rotate.x += 90
-                                }, 0)
+                                }, this.delay)
                             }
 
                         }
@@ -702,50 +910,8 @@
                         }
                     },
 
-                    down(event, area) {
-                        event.preventDefault()
-                        const x = area.x
-                        const y = area.y
-                        const z = area.z
-                        const startx = event.pageX || event.clientX
-                        const starty = event.pageY || event.clientY
-                        document.onmouseup = (event) => {
-                            const endx = event.pageX || event.clientX
-                            const endy = event.pageY || event.clientY
-                            if (Math.abs(endx - startx) > Math.abs(endy - starty)) {
-                                const Clockwise = endx > startx
-                                this.RotateY(x, y, z, Clockwise)
-                            }
-                            else {
-                                console.log('y')
-                                const Clockwise = endy < starty
-                                this.RotateX(x, y, z, Clockwise)
-                            }
-                            document.onmouseup = null
-                        }
-                    },
 
-                    RotateY(x, y, z, Clockwise) {
-                        if (Clockwise === true) val = 1
-                        else val = -1
-                        for (let i = 0; i < this.blocks.length; i++) {
-                            if (this.blocks[i].y === y) {
-                                this.blocks[i].rotate.y += 90 * val
-                            }
-                        }
-                    },
-
-                    RotateX(x, y, z, Clockwise) {
-                        if (Clockwise === true) val = 1
-                        else val = -1
-                        for (let i = 0; i < this.blocks.length; i++) {
-                            if (this.blocks[i].x === x) {
-                                this.blocks[i].rotate.x += 90 * val
-                            }
-                        }
-                    },
                 }
-
             })
         </script>
     </body>
