@@ -59,7 +59,6 @@
                 position: absolute;
                 /* margin: auto; */
             }
-
         </style>
         <script src="vue.js" type="text/javascript" charset="utf-8"></script>
     </head>
@@ -262,323 +261,6 @@
                         if (Operation === 'U') {
                             for (let i = 0; i < this.blocks.length; i++) {
                                 if (this.blocks[i].y === 0) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.y -= 90
-
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldx = this.blocks[i].x
-                                        this.blocks[i].x = this.blocks[i].z
-                                        this.blocks[i].z = 2 - oldx
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'left' }
-                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'back' }
-                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'face' }
-                                            else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'right' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.y += 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //U'
-                        else if (Operation === 'U_') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].y === 0) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.y += 90
-
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldz = this.blocks[i].z
-                                        this.blocks[i].z = this.blocks[i].x
-                                        this.blocks[i].x = 2 - oldz
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'right' }
-                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'face' }
-                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'back' }
-                                            else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'left' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.y -= 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //Left
-                        else if (Operation === 'L') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].x === 0) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.x -= 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldz = this.blocks[i].z
-                                        this.blocks[i].z = this.blocks[i].y
-                                        this.blocks[i].y = 2 - oldz
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'down' }
-                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'back' }
-                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'face' }
-                                            else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'up' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.x += 90
-                                    }, 50)
-                                }
-                            }
-
-                        }
-
-                        //L'
-                        else if (Operation === 'L_') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].x === 0) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.x += 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldy = this.blocks[i].y
-                                        this.blocks[i].y = this.blocks[i].z
-                                        this.blocks[i].z = 2 - oldy
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'up' }
-                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'face' }
-                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'back' }
-                                            else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'down' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.x -= 90
-                                    }, 50)
-                                }
-                            }
-
-                        }
-
-                        //Rright
-                        else if (Operation === 'R') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].x === 2) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.x += 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldy = this.blocks[i].y
-                                        this.blocks[i].y = this.blocks[i].z
-                                        this.blocks[i].z = 2 - oldy
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'down' }
-                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'back' }
-                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'face' }
-                                            else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'up' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.x -= 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //R'
-                        else if (Operation === 'R_') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].x === 2) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.x -= 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldz = this.blocks[i].z
-                                        this.blocks[i].z = this.blocks[i].y
-                                        this.blocks[i].y = 2 - oldz
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'up' }
-                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'face' }
-                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'back' }
-                                            else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'down' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.x += 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //Face
-                        else if (Operation === 'F') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].z === 0) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.z += 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldy = this.blocks[i].y
-                                        this.blocks[i].y = this.blocks[i].x
-                                        this.blocks[i].x = 2 - oldy
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'down' }
-                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'right' }
-                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'left' }
-                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'up' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.z -= 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //F'
-                        else if (Operation === 'F_') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].z === 0) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.z -= 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldx = this.blocks[i].x
-                                        this.blocks[i].x = this.blocks[i].y
-                                        this.blocks[i].y = 2 - oldx
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'up' }
-                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'left' }
-                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'right' }
-                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'down' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.z += 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //Back
-                        else if (Operation === 'B') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].z === 2) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.z -= 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldx = this.blocks[i].x
-                                        this.blocks[i].x = this.blocks[i].y
-                                        this.blocks[i].y = 2 - oldx
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'down' }
-                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'right' }
-                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'left' }
-                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'up' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.z += 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //B'
-                        else if (Operation === 'B_') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].z === 2) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.z -= 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldy = this.blocks[i].y
-                                        this.blocks[i].y = this.blocks[i].x
-                                        this.blocks[i].x = 2 - oldy
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'down' }
-                                            else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'right' }
-                                            else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'left' }
-                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'up' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.z += 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //Down
-                        else if (Operation === 'D') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].y === 2) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.y += 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldz = this.blocks[i].z
-                                        this.blocks[i].z = this.blocks[i].x
-                                        this.blocks[i].x = 2 - oldz
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'left' }
-                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'back' }
-                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'face' }
-                                            else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'right' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.y -= 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //D'
-                        else if (Operation === 'D_') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                if (this.blocks[i].y === 2) {
-                                    this.transition = 0.05
-                                    this.blocks[i].rotate.y -= 90
-                                    setTimeout(() => {
-                                        this.transition = 0
-                                        const oldx = this.blocks[i].x
-                                        this.blocks[i].x = this.blocks[i].z
-                                        this.blocks[i].z = 2 - oldx
-                                        for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                            if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'right' }
-                                            else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'face' }
-                                            else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'back' }
-                                            else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'left' }
-                                            this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                        }
-                                        this.blocks[i].rotate.y += 90
-                                    }, 50)
-                                }
-                            }
-                        }
-
-                        //y'
-                        else if (Operation === 'y_') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                this.transition = 0.05
-                                this.blocks[i].rotate.y += 90
-
-                                setTimeout(() => {
-                                    this.transition = 0
-                                    const oldz = this.blocks[i].z
-                                    this.blocks[i].z = this.blocks[i].x
-                                    this.blocks[i].x = 2 - oldz
-                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                        if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'right' }
-                                        else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'face' }
-                                        else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'back' }
-                                        else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'left' }
-                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
-                                    }
-                                    this.blocks[i].rotate.y -= 90
-                                }, 50)
-                            }
-                        }
-                        //y
-                        else if (Operation === 'y') {
-                            for (let i = 0; i < this.blocks.length; i++) {
-                                this.transition = 0.05
-                                this.blocks[i].rotate.y -= 90
-
-                                setTimeout(() => {
                                     this.transition = 0
                                     const oldx = this.blocks[i].x
                                     this.blocks[i].x = this.blocks[i].z
@@ -591,36 +273,92 @@
                                         this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
                                     }
                                     this.blocks[i].rotate.y += 90
-                                }, 50)
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.y -= 90
+                                    }, 0)
+                                }
                             }
                         }
 
-                        else if (Operation === 'x') {
+                        //U'
+                        else if (Operation === 'U_') {
                             for (let i = 0; i < this.blocks.length; i++) {
-                                this.transition = 0.05
-                                this.blocks[i].rotate.x -= 90
-                                setTimeout(() => {
+                                if (this.blocks[i].y === 0) {
+                                    this.transition = 0
+                                    const oldz = this.blocks[i].z
+                                    this.blocks[i].z = this.blocks[i].x
+                                    this.blocks[i].x = 2 - oldz
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'right' }
+                                        else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'face' }
+                                        else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'back' }
+                                        else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'left' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.y -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.y += 90
+                                    }, 0)
+                                }
+                            }
+                        }
+
+                        //Left
+                        else if (Operation === 'L') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].x === 0) {
                                     this.transition = 0
                                     const oldz = this.blocks[i].z
                                     this.blocks[i].z = this.blocks[i].y
                                     this.blocks[i].y = 2 - oldz
                                     for (let j = 0; j < this.blocks[i].areas.length; j++) {
-                                        if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'up' }
-                                        else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'face' }
+                                        if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'down' }
                                         else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'back' }
-                                        else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'down' }
+                                        else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'face' }
+                                        else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'up' }
                                         this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
                                     }
                                     this.blocks[i].rotate.x += 90
-                                }, 50)
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.x -= 90
+                                    }, 0)
+                                }
                             }
+
                         }
 
-                        else if (Operation === 'x_') {
+                        //L'
+                        else if (Operation === 'L_') {
                             for (let i = 0; i < this.blocks.length; i++) {
-                                this.transition = 0.05
-                                this.blocks[i].rotate.x += 90
-                                setTimeout(() => {
+                                if (this.blocks[i].x === 0) {
+                                    this.transition = 0
+                                    const oldy = this.blocks[i].y
+                                    this.blocks[i].y = this.blocks[i].z
+                                    this.blocks[i].z = 2 - oldy
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'up' }
+                                        else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'face' }
+                                        else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'back' }
+                                        else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'down' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.x -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.x += 90
+                                    }, 0)
+                                }
+                            }
+
+                        }
+
+                        //Rright
+                        else if (Operation === 'R') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].x === 2) {
                                     this.transition = 0
                                     const oldy = this.blocks[i].y
                                     this.blocks[i].y = this.blocks[i].z
@@ -633,7 +371,266 @@
                                         this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
                                     }
                                     this.blocks[i].rotate.x -= 90
-                                }, 50)
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.x += 90
+                                    }, 0)
+                                }
+                            }
+                        }
+
+                        //R'
+                        else if (Operation === 'R_') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].x === 2) {
+                                    this.transition = 0
+                                    const oldz = this.blocks[i].z
+                                    this.blocks[i].z = this.blocks[i].y
+                                    this.blocks[i].y = 2 - oldz
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'up' }
+                                        else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'face' }
+                                        else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'back' }
+                                        else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'down' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.x += 90
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.x -= 90
+                                    }, 0)
+                                }
+                            }
+                        }
+
+                        //Face
+                        else if (Operation === 'F') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].z === 0) {
+                                    this.transition = 0
+                                    const oldy = this.blocks[i].y
+                                    this.blocks[i].y = this.blocks[i].x
+                                    this.blocks[i].x = 2 - oldy
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'down' }
+                                        else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'right' }
+                                        else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'left' }
+                                        else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'up' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.z -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.z += 90
+                                    }, 0)
+                                }
+                            }
+                        }
+
+                        //F'
+                        else if (Operation === 'F_') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].z === 0) {
+                                    this.transition = 0
+                                    const oldx = this.blocks[i].x
+                                    this.blocks[i].x = this.blocks[i].y
+                                    this.blocks[i].y = 2 - oldx
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'up' }
+                                        else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'right' }
+                                        else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'left' }
+                                        else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'down' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.z += 90
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.z -= 90
+                                    }, 0)
+                                }
+                            }
+                        }
+
+                        //Back
+                        else if (Operation === 'B') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].z === 2) {
+                                    this.transition = 0
+                                    const oldx = this.blocks[i].x
+                                    this.blocks[i].x = this.blocks[i].y
+                                    this.blocks[i].y = 2 - oldx
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'down' }
+                                        else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'right' }
+                                        else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'left' }
+                                        else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'up' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.z += 90
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.z -= 90
+                                    }, 0)
+                                }
+                            }
+                        }
+
+                        //B'
+                        else if (Operation === 'B_') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].z === 2) {
+                                    this.transition = 0
+                                    const oldy = this.blocks[i].y
+                                    this.blocks[i].y = this.blocks[i].x
+                                    this.blocks[i].x = 2 - oldy
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'down' }
+                                        else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'right' }
+                                        else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'left' }
+                                        else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'up' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.z -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.z += 90
+                                    }, 0)
+                                }
+                            }
+                        }
+
+                        //Down
+                        else if (Operation === 'D') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].y === 2) {
+                                    this.transition = 0
+                                    const oldz = this.blocks[i].z
+                                    this.blocks[i].z = this.blocks[i].x
+                                    this.blocks[i].x = 2 - oldz
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'left' }
+                                        else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'back' }
+                                        else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'face' }
+                                        else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'right' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.y -= 90
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.y += 90
+                                    }, 0)
+                                }
+                            }
+                        }
+
+                        //D'
+                        else if (Operation === 'D_') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                if (this.blocks[i].y === 2) {
+                                    this.transition = 0
+                                    const oldx = this.blocks[i].x
+                                    this.blocks[i].x = this.blocks[i].z
+                                    this.blocks[i].z = 2 - oldx
+                                    for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                        if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'right' }
+                                        else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'face' }
+                                        else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'back' }
+                                        else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'left' }
+                                        this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                    }
+                                    this.blocks[i].rotate.y += 90
+                                    setTimeout(() => {
+                                        this.transition = 0.2
+                                        this.blocks[i].rotate.y -= 90
+                                    }, 0)
+                                }
+                            }
+                        }
+
+                        //y'
+                        else if (Operation === 'y_') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+
+                                this.transition = 0
+                                const oldz = this.blocks[i].z
+                                this.blocks[i].z = this.blocks[i].x
+                                this.blocks[i].x = 2 - oldz
+                                for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                    if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'right' }
+                                    else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'face' }
+                                    else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'back' }
+                                    else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'left' }
+                                    this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                }
+                                this.blocks[i].rotate.y -= 90
+                                setTimeout(() => {
+                                    this.transition = 0.2
+                                    this.blocks[i].rotate.y += 90
+                                }, 0)
+                            }
+                        }
+                        //y
+                        else if (Operation === 'y') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+
+                                this.transition = 0
+                                const oldx = this.blocks[i].x
+                                this.blocks[i].x = this.blocks[i].z
+                                this.blocks[i].z = 2 - oldx
+                                for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                    if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'left' }
+                                    else if (this.blocks[i].areas[j].direct === 'left') { this.blocks[i].areas[j].direct = 'back' }
+                                    else if (this.blocks[i].areas[j].direct === 'right') { this.blocks[i].areas[j].direct = 'face' }
+                                    else if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'right' }
+                                    this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                }
+                                this.blocks[i].rotate.y += 90
+                                setTimeout(() => {
+                                    this.transition = 0.2
+                                    this.blocks[i].rotate.y -= 90
+                                }, 0)
+                            }
+                        }
+
+                        else if (Operation === 'x') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                this.transition = 0
+                                const oldz = this.blocks[i].z
+                                this.blocks[i].z = this.blocks[i].y
+                                this.blocks[i].y = 2 - oldz
+                                for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                    if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'up' }
+                                    else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'face' }
+                                    else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'back' }
+                                    else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'down' }
+                                    this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                }
+                                this.blocks[i].rotate.x += 90
+                                setTimeout(() => {
+                                    this.transition = 0.2
+                                    this.blocks[i].rotate.x -= 90
+                                }, 0)
+                            }
+                        }
+
+                        else if (Operation === 'x_') {
+                            for (let i = 0; i < this.blocks.length; i++) {
+                                this.transition = 0
+                                const oldy = this.blocks[i].y
+                                this.blocks[i].y = this.blocks[i].z
+                                this.blocks[i].z = 2 - oldy
+                                for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                    if (this.blocks[i].areas[j].direct === 'back') { this.blocks[i].areas[j].direct = 'down' }
+                                    else if (this.blocks[i].areas[j].direct === 'up') { this.blocks[i].areas[j].direct = 'back' }
+                                    else if (this.blocks[i].areas[j].direct === 'down') { this.blocks[i].areas[j].direct = 'face' }
+                                    else if (this.blocks[i].areas[j].direct === 'face') { this.blocks[i].areas[j].direct = 'up' }
+                                    this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                }
+                                this.blocks[i].rotate.x -= 90
+                                setTimeout(() => {
+                                    this.transition = 0.2
+                                    this.blocks[i].rotate.x += 90
+                                }, 0)
                             }
 
                         }
