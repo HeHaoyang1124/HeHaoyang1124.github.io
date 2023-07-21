@@ -546,12 +546,73 @@
                         if (up === 1) {
                             //OLL1
                             if (face === 3) {
-                                var UNum = 0
-                                for (UNum = 0; UNum < 4 && TopCornerDirect[UNum] != 'up'; UNum++)
-                                    this.Notation('U')
-                                this.Notation('R_UURUR_UR')
+                                const algorithm = 'R_UURUR_UR'
+                                if (TopCornerDirect[0] === 'up') this.Notation(algorithm)
+                                else if (TopCornerDirect[1] === 'up') this.Notation('U' + algorithm)
+                                else if (TopCornerDirect[2] === 'up') this.Notation('UU' + algorithm)
+                                else if (TopCornerDirect[3] === 'up') this.Notation('U_' + algorithm)
                             }
-
+                            //OLL2
+                            else if (right === 3) {
+                                const algorithm = 'RUUR_U_RU_R_'
+                                if (TopCornerDirect[0] === 'up') this.Notation('U_' + algorithm)
+                                else if (TopCornerDirect[1] === 'up') this.Notation(algorithm)
+                                else if (TopCornerDirect[2] === 'up') this.Notation('U' + algorithm)
+                                else if (TopCornerDirect[3] === 'up') this.Notation('UU' + algorithm)
+                            }
+                        }
+                        //cross
+                        else if (up === 0) {
+                            var oll3 = false
+                            for (let i = 0; i < 4; i++) {
+                                if (TopCornerDirect[i] === TopCornerDirect[(i + 1) % 4]) {
+                                    oll3 = true
+                                    break
+                                }
+                            }
+                            //OLL3
+                            if (oll3) {
+                                const algorithm = 'RUURRU_RRU_RRUUR'
+                                if (TopCornerDirect[0] === 'face' && TopCornerDirect[1] === 'right') this.Notation(algorithm)
+                                else if (TopCornerDirect[1] === 'face' && TopCornerDirect[2] === 'right') this.Notation('U' + algorithm)
+                                else if (TopCornerDirect[2] === 'face' && TopCornerDirect[3] === 'right') this.Notation('UU' + algorithm)
+                                else if (TopCornerDirect[3] === 'face' && TopCornerDirect[0] === 'right') this.Notation('U_' + algorithm)
+                            }
+                            //OLL4
+                            else {
+                                const algorithm = 'RUUR_U_RUR_U_RU_R_'
+                                if (TopCornerDirect[0] === 'face') this.Notation(algorithm)
+                                else this.Notation('U' + algorithm)
+                            }
+                        }
+                        //Double_Fish
+                        else if (up === 2) {
+                            var i = 0
+                            for (i = 0; i < 4 && TopCornerDirect[i] != 'face'; i++) { }
+                            //OLL5
+                            if (TopCornerDirect[(i + 3) % 4] === 'right') {
+                                const algorithm = 'RRD_RUUR_DRUUR'
+                                if(TopCornerDirect[0] === 'face') this.Notation('UU' + algorithm)
+                                else if(TopCornerDirect[1] === 'face') this.Notation('U_' + algorithm)
+                                else if(TopCornerDirect[2] === 'face') this.Notation(algorithm)
+                                else if(TopCornerDirect[3] === 'face') this.Notation('U' + algorithm)
+                            }
+                            //OLL6
+                            if (TopCornerDirect[(i + 2) % 4] === 'right') {
+                                const algorithm = 'F_x_LUR_U_xL_FR'
+                                if(TopCornerDirect[0] === 'face') this.Notation(algorithm)
+                                else if(TopCornerDirect[1] === 'face') this.Notation('U' + algorithm)
+                                else if(TopCornerDirect[2] === 'face') this.Notation('UU' + algorithm)
+                                else if(TopCornerDirect[3] === 'face') this.Notation('U_' + algorithm)
+                             }
+                            //OLL7
+                            if (TopCornerDirect[(i + 1) % 4] === 'right') {
+                                const algorithm = 'x_LUR_U_xL_FRF_'
+                                if(TopCornerDirect[0] === 'face') this.Notation('UU' + algorithm)
+                                else if(TopCornerDirect[1] === 'face') this.Notation('U_' + algorithm)
+                                else if(TopCornerDirect[2] === 'face') this.Notation(algorithm)
+                                else if(TopCornerDirect[3] === 'face') this.Notation('U' + algorithm)
+                             }
                         }
                     },
 

@@ -63,8 +63,6 @@
    
    - TargetColor_Direct = 'face' $\to$ *algorithm1*
      TargetColor_direct = 'up' $\to$ *algorithm2*
-     
-     
 
 5. Top Cross
    记录Longitudinal, Transverse 
@@ -89,8 +87,46 @@
    
    - 点：$L=T=2\to$ *algorithm2* + U + *algorithm1*
 
-6. prisms
+6. oll：
+   每个角块的位置
+   
+   - $(x, z) = (2, 0)\to$ MainDirect: yellowDirect == 'face' ? face : right
+   - $(x, z) = (2, 2)\to$ MainDirect: yellowDirect == 'right' ? face : right
+   - $(x, z) = (0, 2)\to$ MainDirect: yellowDirect == 'back' ? face : right
+   - $(x, z) = (0, 0)\to$ MainDirect: yellowDirect == 'left' ? face : right
+   
+   组合情况
+   
+   - $u=1$ (鱼)
+     
+     - oll1: $f = 3\to $ R' U2 R U R' U R
+       ![](./oll/oll1.gif)
+     
+     - oll2: $r = 3\to$ R U' U' R' U' R U' R'
+       ![](./oll/oll2.gif)
+   
+   - $u=0$
+     
+     - oll3: 存在$D_i = D_{(i+1) \mod 4} \to$ R U'U' R2' U' R2 U' R2' U2 R
+       ![](./oll/oll3.gif)
+     
+     - oll4: 任意$D_i \neq D_{(i+1) \mod 4} \to$ R U U R' U' R U R' U' R U' R'
+       ![](./oll/oll4.gif)
+   
+   - $u=2$
+     
+     - oll5: 当$D_i=f()$时，
+       有$D_{(i+3) \mod 4}=r()\to$ R2 D' R U'U' R' D R U'U' R
+       ![](./oll/oll5.gif)
+     
+     - oll6: 当$D_i=f()$时，
+       有$D_{(i+2) \mod 4}=r()\to$ F' r U R' U' r' F R 
+       ![](./oll/oll6.gif)
+     
+     - oll7: 当$D_i=f()$时，
+       有$D_{(i+1) \mod 4}=r()\to$ r U R' U' r' F R F'
+       ![](./oll/oll7.gif)
 
-7. oll
+7. pll
 
-8. pll
+
