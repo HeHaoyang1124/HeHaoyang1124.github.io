@@ -248,7 +248,9 @@
                             z: 0,
                             direct: 'face'
                         },
-                        delay: 0
+                        delay: 0,
+
+                        duration: ''
                     }
                 },
                 created() {
@@ -261,6 +263,7 @@
                 },
                 methods: {
                     Notation(String) {
+                        this.duration += String
                         for (let i = 0; i < String.length; i++) {
                             if (i < String.length - 1 && String[i + 1] === '_') {
                                 this.Rotate(String[i] + '_')
@@ -282,9 +285,9 @@
                             if (direct === 'up') {
                                 this.Notation('x_x_')
                             } else if (direct === 'face') {
-                                this.Rotate('x')
+                                this.Notation('x')
                             } else if (direct === 'back') {
-                                this.Rotate('x_')
+                                this.Notation('x_')
                             } else if (direct === 'left') {
                                 this.Notation('yx_')
                             } else if (direct === 'right') {
@@ -293,7 +296,7 @@
                         }
                         else {
                             if (direct === 'back') {
-                                this.Rotate('yy')
+                                this.Notation('yy')
                             } else if (direct === 'left') {
                                 this.Notation('y_')
                             } else if (direct === 'right') {
@@ -467,8 +470,44 @@
 
                         this.getPrisms(TargetColor, MinorColor)
                         var direct = this.prisms.direct
-                        if(direct === 'face') {this.Notation(algorithm1)}
-                        else if(direct === 'up') {this.Notation(algorithm2)}
+                        if (direct === 'face') { this.Notation(algorithm1) }
+                        else if (direct === 'up') { this.Notation(algorithm2) }
+                    },
+
+
+                    Top_Cross() {
+                        const algorithm1 = 'FRUR_U_F_'
+                        const algorithm2 = 'FRUR_U_RUR_U_F_'
+                        const colors = {
+                            1: 'blue',
+                            2: 'red',
+                            3: 'green',
+                            4: 'orange',
+                        }
+                        var transverse = 0
+                        var longitudinal = 0
+                        var left = false
+                        var face = false
+                        var right = false
+                        var back = false
+                        for (let i = 1; i <= 4; i++) {
+                            this.getPrisms('yellow', colors[i])
+                            if (this.prisms.direct === 'left') { transverse++, left = true }
+                            else if (this.prisms.direct === 'right') { transverse++, right = true }
+                            else if (this.prisms.direct === 'face') { longitudinal++, face = true }
+                            else if (this.prisms.direct === 'back') { longitudinal++, back = true }
+                        }
+                        if (transverse === 0 && longitudinal === 0) { return }
+                        if (transverse === 2 && longitudinal === 0) { this.Notation('U' + algorithm1) }
+                        else if (transverse === 0 && longitudinal === 2) { this.Notation(algorithm1) }
+                        else if (transverse === 1 && longitudinal === 1) {
+                            if (left && face) { this.Notation('U_' + algorithm2) }
+                            else if (face && right) { this.Notation('UU' + algorithm2) }
+                            else if (right && back) { this.Notation('U' + algorithm2) }
+                            else if (back && left) { this.Notation(algorithm2) }
+                        }
+                        else if (transverse === 2 && longitudinal === 2)
+                            this.Notation(algorithm2 + 'U' + algorithm1)
                     },
 
 
@@ -477,7 +516,10 @@
                         this.positioning('white')
                         for (let i = 1; i <= 4; i++) this.Make_Cross(i)
                         for (let i = 1; i <= 4; i++) this.Make_Corner(i)
-                        for (let i = 1; i <= 4; i++) this.Middle_Layer(i)
+                        for (let i = 1; i <= 4; i++) { this.Middle_Layer(i) }
+
+                        this.Top_Cross()
+                        // console.log(this.duration)
                     },
 
                     Start() {

@@ -39,7 +39,6 @@
      - 白色指向顶面 whiteDirect = 'up'
 
 4. Middle Layer
-   公式：
    对于每一个棱块情况如下
    
    - 已还原$(x, y, z) = (2, 1, 0) $ TargetColor_Direct = 'face'
@@ -62,13 +61,33 @@
      
      - $(x, z) = (0, 1)\to$ U'
    
-   - TargetColor_Direct = 'face' $\to$ 公式1
-     
-     TargetColor_direct = 'up' $\to$ 公式2
+   - TargetColor_Direct = 'face' $\to$ *algorithm1*
+     TargetColor_direct = 'up' $\to$ *algorithm2*
      
      
 
-5. cross
+5. Top Cross
+   记录Longitudinal, Transverse 
+   
+   - 十字：$L = T = 0$
+   
+   - 一字：   
+     
+     - $\left\{\begin{matrix} L=2 \\ T=0 \end{matrix}\right.\to$ *algorithm1*
+     
+     - $\left\{\begin{matrix} L=0 \\ T=2 \end{matrix}\right.\to$ U + *algorithm1*
+   
+   - 直角：  $L=T=1$ 
+     
+     - left + face：U + *algorithm2*
+     
+     - face + right: UU + *algorithm2*
+     
+     - right + back: U' + *algorithm2*
+     
+     - back + left: *algorithm2*
+   
+   - 点：$L=T=2\to$ *algorithm2* + U + *algorithm1*
 
 6. prisms
 
