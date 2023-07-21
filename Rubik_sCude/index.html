@@ -361,9 +361,9 @@
                             4: 'orange'
                         }
 
-                        var target_color = colors[num]
-                        this.positioning(target_color)
-                        this.getPrisms('white', target_color)
+                        var TargetColor = colors[num]
+                        this.positioning(TargetColor)
+                        this.getPrisms('white', TargetColor)
                         var x = this.prisms.x
                         var y = this.prisms.y
                         var z = this.prisms.z
@@ -388,7 +388,7 @@
                         }
 
                         //top
-                        this.getPrisms('white', target_color)
+                        this.getPrisms('white', TargetColor)
                         if (this.prisms.direct === 'face') this.Notation('U_R_FR')
                         else if (this.prisms.direct === 'up') this.Notation('FF')
                     },
@@ -433,11 +433,51 @@
                         //
                     },
 
+                    Middle_Layer(num) {
+                        const algorithm1 = 'URU_R_U_F_UF'
+                        const algorithm2 = 'UUF_UFURU_R_'
+
+                        const colors = {
+                            1: 'blue',
+                            2: 'red',
+                            3: 'green',
+                            4: 'orange',
+                            5: 'blue'
+                        }
+                        var TargetColor = colors[num]
+                        var MinorColor = colors[num + 1]
+                        this.positioning(TargetColor)
+                        this.getPrisms(TargetColor, MinorColor)
+                        var x = this.prisms.x
+                        var y = this.prisms.y
+                        var z = this.prisms.z
+                        var direct = this.prisms.direct
+
+                        if (x === 2 && y === 1 && z === 0 && direct === 'face') { return }
+                        if (y === 1) {
+                            if (x === 0 && z === 0) { this.Notation('y_' + algorithm1 + 'yU') }
+                            else if (x === 2 && z === 0) { this.Notation(algorithm1 + 'UU') }
+                            else if (x === 2 && z === 2) { this.Notation('y' + algorithm1 + 'y_U_') }
+                            else if (x === 0 && z === 2) { this.Notation('yy' + algorithm1 + 'yy') }
+                        } else if (y === 0) {
+                            if (x === 1 && z === 2) { this.Notation('UU') }
+                            else if (x === 2 && z === 1) { this.Notation('U') }
+                            else if (x === 0 && z === 1) { this.Notation('U_') }
+                        }
+
+                        this.getPrisms(TargetColor, MinorColor)
+                        var direct = this.prisms.direct
+                        if(direct === 'face') {this.Notation(algorithm1)}
+                        else if(direct === 'up') {this.Notation(algorithm2)}
+                    },
+
+
                     Solve() {
                         //positioning
                         this.positioning('white')
                         for (let i = 1; i <= 4; i++) this.Make_Cross(i)
                         for (let i = 1; i <= 4; i++) this.Make_Corner(i)
+                        for (let i = 1; i <= 4; i++) this.Middle_Layer(i)
                     },
 
                     Start() {
