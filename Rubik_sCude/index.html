@@ -505,9 +505,9 @@
                         else if (transverse === 0 && longitudinal === 2) { this.Notation(algorithm1) }
                         else if (transverse === 1 && longitudinal === 1) {
                             if (left && face) { this.Notation('U_' + algorithm2) }
-                            else if (face && right) { this.Notation('UU' + algorithm2) }
+                            else if (face && right) { this.Notation(algorithm2) }
                             else if (right && back) { this.Notation('U' + algorithm2) }
-                            else if (back && left) { this.Notation(algorithm2) }
+                            else if (back && left) { this.Notation('UU' + algorithm2) }
                         }
                         else if (transverse === 2 && longitudinal === 2)
                             this.Notation(algorithm2 + 'U' + algorithm1)
