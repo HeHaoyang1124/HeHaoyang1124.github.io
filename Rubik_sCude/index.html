@@ -336,9 +336,12 @@
                         for (let i = 0; i < this.blocks.length; i++) {
                             if (this.blocks[i].areas.length === 3) {
                                 var colors = []
-                                colors.push(this.blocks[i].areas[0].color)
-                                colors.push(this.blocks[i].areas[1].color)
-                                colors.push(this.blocks[i].areas[2].color)
+                                var color1 = this.blocks[i].areas[0].color
+                                var color2 = this.blocks[i].areas[1].color
+                                var color3 = this.blocks[i].areas[2].color
+                                colors.push(color1)
+                                colors.push(color2)
+                                colors.push(color3)
                                 colors.sort()
                                 TargetColors.sort()
                                 if (colors[0] === TargetColors[0]
@@ -510,6 +513,47 @@
                             this.Notation(algorithm2 + 'U' + algorithm1)
                     },
 
+                    OLL() {
+                        const colors = {
+                            1: 'blue',
+                            2: 'red',
+                            3: 'green',
+                            4: 'orange',
+                            5: 'blue'
+                        }
+                        var up = 0, face = 0, right = 0
+                        var TopCornerDirect = { 0: 'up', 1: 'up', 2: 'up', 3: 'up', }
+                        for (let i = 1; i <= 4; i++) {
+                            this.getCorner('yellow', colors[i], colors[i + 1])
+                            var x = this.corner.x
+                            var z = this.corner.z
+                            var direct = this.corner.direct
+                            if (direct === 'up') { up++ }
+                            else if (x === 2 && z === 0)
+                                if (direct === 'face') TopCornerDirect[0] = 'face', face++
+                                else TopCornerDirect[0] = 'right', right++
+                            else if (x === 2 && z === 2)
+                                if (direct === 'right') TopCornerDirect[1] = 'face', face++
+                                else TopCornerDirect[1] = 'right', right++
+                            else if (x === 0 && z === 2)
+                                if (direct === 'back') TopCornerDirect[2] = 'face', face++
+                                else TopCornerDirect[2] = 'right', right++
+                            else if (x === 0 && z === 0)
+                                if (direct === 'left') TopCornerDirect[3] = 'face', face++
+                                else TopCornerDirect[3] = 'right', right++
+                        }
+                        //fish
+                        if (up === 1) {
+                            //OLL1
+                            if (face === 3) {
+                                var UNum = 0
+                                for (UNum = 0; UNum < 4 && TopCornerDirect[UNum] != 'up'; UNum++)
+                                    this.Notation('U')
+                                this.Notation('R_UURUR_UR')
+                            }
+
+                        }
+                    },
 
                     Solve() {
                         //positioning
@@ -519,6 +563,7 @@
                         for (let i = 1; i <= 4; i++) { this.Middle_Layer(i) }
 
                         this.Top_Cross()
+                        this.OLL()
                         // console.log(this.duration)
                     },
 
