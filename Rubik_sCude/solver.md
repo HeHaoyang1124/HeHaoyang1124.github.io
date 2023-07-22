@@ -146,9 +146,55 @@
    
    - 顺时针三棱换
      $(D_1, D_2, D_3) = (back, left, right)$
-     
      (R2' U)(R U R' U')(R' U')(R' U R')
    
    - 相邻换
      $(D_1, D_2, D_3) = (back, right, left)$
      U'F(R U'R' U')(R U R' F')(R U R' U')(R' F R F')
+
+8. Change Corner
+   
+   - 标准朝向
+     
+     - $s_0 = (x, y) = (2, 0)$
+     - $s_1 = (x, y) = (2, 2)$
+     - $s_2 = (x, y) = (0, 2)$
+     - $s_3 = (x, y) = (0, 0)$
+   
+   - 角块朝向
+     
+     - blue: $D_0$
+     
+     - red: $D_1$
+     
+     - green: $D_2$
+     
+     - orange: $D_3$
+   
+   - 位移
+     
+     - face: $D_i = s_i$
+     
+     - right: $D_i = s_{(i+3) \mod 4}$
+     
+     - back: $D_0 = s_{(i+2) \mod 4}$
+     
+     - left: $D_0 = s_{(i+1) \mod 4}$
+   
+   - 公式
+     
+     - 顺时针三角换: $l = 2, b = 1$
+       FFLLF_R_FLLF_RF_
+     
+     - 逆时针三角换: $r = 2, b=1$
+       FFRRFLF_RRFL_F
+     
+     - 十字交换: $b=4$
+       
+       MMUMMUUMMUMM
+     
+     - 平行交换: $b=0$
+       
+       RRUR_U_yRUR_U_RUR_U_RUR_y_RU_RR
+
+

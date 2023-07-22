@@ -709,12 +709,90 @@
                 },
 
                 Change_TopCorner() {
+                    const colors = {
+                        0: 'blue',
+                        1: 'red',
+                        2: 'green',
+                        3: 'orange',
+                    }
+                    const stdDirect = {
+                        0: {
+                            x: 2,
+                            z: 0
+                        },
+                        1: {
+                            x: 2,
+                            z: 2
+                        },
+                        2: {
+                            x: 0,
+                            z: 2
+                        },
+                        3: {
+                            x: 0,
+                            z: 0
+                        }
+                    }
+                    const TopCornerDirect = []
+                    var face = 0,
+                        right = 0,
+                        back = 0,
+                        left = 0
+
                     this.positioning('blue')
                     this.getPrisms('blue', 'yellow')
                     var direct = this.prisms.direct
                     if (direct === 'left') this.Notation('U_')
                     else if (direct === 'right') this.Notation('U')
                     else if (direct === 'back') this.Notation('UU')
+                    for (let i = 0; i < 4; i++) {
+                        this.getCorner(colors[i], colors[(i + 1) % 4], 'yellow')
+                        var x = this.corner.x
+                        var z = this.corner.z
+                        if (x === stdDirect[i].x && z === stdDirect[i].z) {
+                            TopCornerDirect.push('face')
+                            face++
+                        } else if (x === stdDirect[(i + 3) % 4].x && z === stdDirect[(i + 3) % 4].z) {
+                            TopCornerDirect.push('right')
+                            right++
+                        } else if (x === stdDirect[(i + 2) % 4].x && z === stdDirect[(i + 2) % 4].z) {
+                            TopCornerDirect.push('back')
+                            back++
+                        } else if (x === stdDirect[(i + 1) % 4].x && z === stdDirect[(i + 1) % 4].z) {
+                            TopCornerDirect.push('left')
+                            left++
+                        }
+                    }
+                    //三角换
+                    if (back === 1) {
+                        //顺时针
+                        if (left === 2) {
+                            const algorithm = 'FFLLF_R_FLLF_RF_'
+                            if (TopCornerDirect[0] === 'face') this.Notation('y_' + algorithm)
+                            else if (TopCornerDirect[1] === 'face') this.Notation(algorithm)
+                            else if (TopCornerDirect[2] === 'face') this.Notation('y' + algorithm)
+                            else if (TopCornerDirect[3] === 'face') this.Notation('yy' + algorithm)
+                        }
+                        //逆时针
+                        else if (right === 2) {
+                            const algorithm = 'FFRRFLF_RRFL_F'
+                            if (TopCornerDirect[0] === 'face') this.Notation('yy' + algorithm)
+                            else if (TopCornerDirect[1] === 'face') this.Notation('y_' + algorithm)
+                            else if (TopCornerDirect[2] === 'face') this.Notation(algorithm)
+                            else if (TopCornerDirect[3] === 'face') this.Notation('y' + algorithm)
+                        }
+                    }
+                    //十字
+                    else if (back === 4) {
+                        const algorithm = 'MMUMMUUMMUMM'
+                        this.Notation('UU' + algorithm)
+                    }
+                    //平行
+                    else if (back === 0 && face === 0) {
+                        const algorithm = 'RRUR_U_yRUR_U_RUR_U_RUR_y_RU_RR'
+                        if (TopCornerDirect[0] === 'right') this.Notation('U' + algorithm)
+                        else if (TopCornerDirect[0] === 'left') this.Notation(algorithm)
+                    }
 
                 },
 
@@ -1222,6 +1300,32 @@
                             }, this.delay)
                         }
 
+                    } else if (Operation === 'M') {
+                        for (let i = 0; i < this.blocks.length; i++) {
+                            if (this.blocks[i].x === 1) {
+                                this.transition = 0
+                                const oldy = this.blocks[i].y
+                                this.blocks[i].y = this.blocks[i].z
+                                this.blocks[i].z = 2 - oldy
+                                for (let j = 0; j < this.blocks[i].areas.length; j++) {
+                                    if (this.blocks[i].areas[j].direct === 'back') {
+                                        this.blocks[i].areas[j].direct = 'down'
+                                    } else if (this.blocks[i].areas[j].direct === 'up') {
+                                        this.blocks[i].areas[j].direct = 'back'
+                                    } else if (this.blocks[i].areas[j].direct === 'down') {
+                                        this.blocks[i].areas[j].direct = 'face'
+                                    } else if (this.blocks[i].areas[j].direct === 'face') {
+                                        this.blocks[i].areas[j].direct = 'up'
+                                    }
+                                    this.blocks[i].areas[j].transform = this.getarea(this.blocks[i].areas[j].direct).transform
+                                }
+                                this.blocks[i].rotate.x -= 90
+                                setTimeout(() => {
+                                    this.transition = 0.2
+                                    this.blocks[i].rotate.x += 90
+                                }, this.delay)
+                            }
+                        }
                     }
                 },
 
