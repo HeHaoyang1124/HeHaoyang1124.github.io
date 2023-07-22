@@ -127,6 +127,28 @@
        有$D_{(i+1) \mod 4}=r()\to$ r U R' U' r' F R F'
        ![](./oll/oll7.gif)
 
-7. pll
-
-
+7. Change Prisms
+   
+   - 已还原
+     $(D_1, D_2, D_3) = (right, back, left)$
+   
+   - 相邻换
+     $(D_1, D_2, D_3) = (right, left, back)$
+     F(R U'R' U')(R U R' F')(R U R' U')(R' F R F')
+   
+   - 逆时针三棱换
+     $(D_1, D_2, D_3) = (left, right, back)$
+     (R U' R) U (R U R U') (R' U' R2)
+   
+   - 对棱换
+     $(D_1, D_2, D_3) = (left, back, right)$
+     (R U R' U')(R' F R2 U' R' U')(R U R' F')
+   
+   - 顺时针三棱换
+     $(D_1, D_2, D_3) = (back, left, right)$
+     
+     (R2' U)(R U R' U')(R' U')(R' U R')
+   
+   - 相邻换
+     $(D_1, D_2, D_3) = (back, right, left)$
+     U'F(R U'R' U')(R U R' F')(R U R' U')(R' F R F')
