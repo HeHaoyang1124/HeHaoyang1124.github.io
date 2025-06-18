@@ -9,6 +9,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 搜索功能
     document.getElementById('search').addEventListener('input', searchMember);
+    
+    // 阻止触摸事件的默认行为
+    document.getElementById('tree').addEventListener('touchstart', function(e) {
+        if (e.touches.length >= 2) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    document.getElementById('tree').addEventListener('touchmove', function(e) {
+        if (e.touches.length >= 2) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 });
 
 // 加载家族数据
@@ -42,23 +55,31 @@ function initTree() {
     // 清除旧内容
     container.innerHTML = '';
     
-    // 创建SVG
+    // 创建SVG和分组用于缩放和平移
     treeSvg = d3.select('#tree')
         .append('svg')
         .attr('width', width)
-        .attr('height', height);
+        .attr('height', height)
+        .call(d3.zoom()
+            .scaleExtent([0.5, 3])
+            .on('zoom', zoomed)
+        )
+        .on("dblclick.zoom", null);
+    
+    // 添加一个分组作为所有内容的容器
+    treeG = treeSvg.append('g');
     
     // 创建树布局 - 竖向
     const treeLayout = d3.tree()
-        .size([width - 40, height - 80])  // 留出边距
-        .nodeSize([80, 150]);  // 节点间距
+        .size([width - 40, height - 80])
+        .nodeSize([80, 150]);
     
     // 创建层次结构
     const root = d3.hierarchy(familyData);
     const treeData = treeLayout(root);
     
     // 创建连接线 - 竖向
-    treeSvg.selectAll('.link')
+    treeG.selectAll('.link')
         .data(treeData.links())
         .enter()
         .append('path')
@@ -69,7 +90,7 @@ function initTree() {
         );
     
     // 创建节点组
-    const nodes = treeSvg.selectAll('.node')
+    const nodes = treeG.selectAll('.node')
         .data(treeData.descendants())
         .enter()
         .append('g')
@@ -87,6 +108,16 @@ function initTree() {
         .attr('text-anchor', 'middle')
         .text(d => d.data.name)
         .style('font-size', '13px');
+    
+    // 初始居中显示
+    const initialX = width / 2 - treeData.x;
+    const initialY = 30;
+    treeG.attr('transform', `translate(${initialX},${initialY})`);
+}
+
+// 缩放和平移处理函数
+function zoomed(event) {
+    treeG.attr('transform', event.transform);
 }
 
 // 显示成员详情
