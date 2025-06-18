@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+
+    <title>家族族谱系统</title>
+
+
+</head>
+
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1><i class="fas fa-tree header-icon"></i> 家族族谱系统</h1>
+            <p class="subtitle"></p>
+        </header>
+        <div class="data-controls">
+            <!-- 更新日期 -->
+            <div class="data-source">
+                <strong>更新日期：</strong>
+                <span id="data-source-info">2025.06.18</span>
+            </div>
+            <!-- 数据源 -->
+            <div class="data-source">
+                <strong>数据源：</strong>
+                <span id="data-source-info">family-data.json</span>
+            </div>
+            <!-- 刷新按钮 -->
+            <button class="btn" id="reload-btn">
+                <i class="fas fa-sync-alt"></i> 重新加载数据
+            </button>
+
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="搜索家族成员...">
+            </div>
+
+        </div>
+
+        <div class="error-message" id="error-message"></div>
+
+        <div class="main-content">
+            <div class="tree-container">
+                <div class="tree-header">
+                    <h3><i class="fas fa-project-diagram"></i> 家族树状图</h3>
+                    <div>
+                        <span id="member-count">0</span> 位成员 |
+                        <span id="generation-count">0</span> 代人
+                    </div>
+                </div>
+                <svg id="tree-svg"></svg>
+                <div class="controls">
+                    <div class="control-btn" id="zoom-in"><i class="fas fa-search-plus"></i></div>
+                    <div class="control-btn" id="zoom-out"><i class="fas fa-search-minus"></i></div>
+                    <div class="control-btn" id="reset-view"><i class="fas fa-expand"></i></div>
+                </div>
+                <div class="loading-overlay" id="loading-overlay">
+                    <div class="spinner"></div>
+                    <p>正在加载家族数据...</p>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <div class="panel-header">
+                    <i class="fas fa-user-circle panel-icon"></i>
+                    <h2 class="panel-title">成员信息</h2>
+                </div>
+
+                <div class="default-message">
+                    <i class="fas fa-user-friends default-icon"></i>
+                    <h3>点击族谱中的成员查看详细信息</h3>
+                    <p>选择树状图中的任意成员节点，这里将显示该成员的详细信息、生平及家庭关系</p>
+                    <div class="data-info">
+                        当前加载的数据源: <strong>family-data.json</strong>
+                    </div>
+                </div>
+
+                <div class="member-details">
+                    <div class="member-header">
+                        <div class="member-avatar" id="member-avatar">
+                            <span id="avatar-initial">A</span>
+                        </div>
+                        <h2 class="member-name" id="member-name">姓名</h2>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3 class="detail-title"><i class="fas fa-info-circle"></i> 基本信息</h3>
+                        <p class="detail-content" id="basic-info"></p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3 class="detail-title"><i class="fas fa-book-open"></i> 生平简介</h3>
+                        <p class="detail-content" id="bio"></p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3 class="detail-title"><i class="fas fa-users"></i> 家庭关系</h3>
+                        <div class="relationships" id="relationships"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p> v0.1 | 家族族谱系统 | @Howyoung制作</p>
+        </footer>
+    </div>
+
+
+    <script src="./js/d3.v7.min.js"></script>
+    <script src="./js/app.js"></script>
+
+</body>
+
+</html>
